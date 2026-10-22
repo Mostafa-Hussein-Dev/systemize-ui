@@ -21,7 +21,9 @@
     "./tokens.css": "./src/styles/tokens.css"
   },
   "files": [
-    "src"
+    "src",
+    "docs",
+    "README.md"
   ],
   "scripts": {
     "typecheck": "tsc --noEmit"
