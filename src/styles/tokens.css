@@ -1,0 +1,234 @@
+/* ==========================================================================
+   FLOWSTACK DESIGN TOKENS
+   Source of truth: "Flowstack ERP — Design System & Developer Handoff".
+   Every value below traces to a row in that document. If a value here and the
+   handoff disagree, the handoff wins — fix this file, not the component.
+
+   Four independent axes live in this file, and they are deliberately
+   independent — changing one must never require touching another:
+     1. BRAND     — the single accent (emerald). One color, three tokens.
+     2. NEUTRALS  — page/surface/border/text. The ONLY axis light/dark swaps.
+     3. SEMANTIC  — danger/warning/info/neutral badges. Identical in both modes.
+     4. FEEL      — density (spacious|compact) and corners (rounded|sharp),
+                    toggled by data attributes on <html>.
+   ========================================================================== */
+
+:root {
+   /* =======================================================================
+      1. BRAND — handoff §1
+      Emerald green. Not purple, not a gradient. Exactly one accent color in
+      the whole product; `--brand-hover` and `--brand-soft` are derived from
+      it, so a rebrand is a one-line change to `--brand`.
+      `--brand-soft` intentionally mixes toward white rather than being a
+      hand-picked tint — that keeps it locked to the accent through a reskin.
+      It stays identical in dark mode (see the dark block below), which is why
+      it is declared here and not among the neutrals.
+      ======================================================================= */
+   --brand: #10b981;
+   --brand-hover: #0e9f6e;
+   --brand-soft: color-mix(in srgb, var(--brand) 12%, white);
+
+   /* Numbered brand scale. Kept because existing components address the
+      accent by step (`bg-secondary-700`); every step is a mix of --brand, so
+      the whole ramp follows a rebrand automatically. */
+   --secondary-900: var(--brand-hover);
+   --secondary-700: var(--brand);
+   --secondary-500: color-mix(in srgb, var(--brand) 55%, white);
+   --secondary-300: color-mix(in srgb, var(--brand) 30%, white);
+   --secondary-100: var(--brand-soft);
+
+   /* Ink scale — structure, not action: headings and dark chrome. Never a
+      button. This is the "primary" of the original system, retuned to the
+      handoff's slate text ramp. */
+   --primary-900: #0f172a; /* --text-strong */
+   --primary-700: #374151; /* --text-body */
+   --primary-500: #6b7280; /* --text-muted */
+   --primary-300: #9ca3af;
+   --primary-200: #e5e7eb;
+   --primary-100: #f1f5f9;
+
+   /* Reserved third accent — not consumed anywhere. Kept as a slot so a
+      future tertiary has a defined home rather than a new hex in a component. */
+   --tertiary-900: #1f4d47;
+   --tertiary-700: color-mix(in srgb, var(--tertiary-900) 88%, white);
+   --tertiary-500: color-mix(in srgb, var(--tertiary-900) 55%, white);
+   --tertiary-300: color-mix(in srgb, var(--tertiary-900) 30%, white);
+   --tertiary-100: color-mix(in srgb, var(--tertiary-900) 10%, white);
+
+   /* =======================================================================
+      2. NEUTRALS — handoff §1, light mode
+      The only axis the light/dark toggle touches.
+      ======================================================================= */
+   --page-bg: #f7f8fa;
+   --surface-bg: #ffffff;
+   --border-color: #e5e7eb;
+   --row-border: #f1f5f9; /* table row dividers — lighter than card border */
+   --table-head-bg: #f9fafb;
+   --text-strong: #0f172a;
+   --text-body: #374151;
+   --text-muted-color: #6b7280;
+   --text-placeholder: #9ca3af;
+
+   /* Aliases the app addresses neutrals by. Components read these, never the
+      raw values above — that indirection is what makes the dark block a short
+      remap instead of a second copy of the whole system. */
+   --background: var(--page-bg);
+   --surface: var(--surface-bg);
+   --surface-secondary: #f3f4f6; /* outline-button hover, subtle fills */
+   --card: var(--surface-bg);
+   --modal: var(--surface-bg);
+   --popover: var(--surface-bg);
+
+   --text-primary: var(--text-strong);
+   --text-secondary: var(--text-body);
+   --text-muted: var(--text-muted-color);
+   --text-disabled: var(--text-placeholder);
+   --text-on-primary: #ffffff; /* text on brand / sidebar fills */
+
+   --border: var(--border-color);
+   --border-light: var(--row-border);
+   --divider: var(--row-border);
+
+   /* Sidebar — handoff §1. Deliberately NOT a neutral alias: the sidebar is a
+      fixed dark "chrome" surface in BOTH themes, so it is absent from the dark
+      block below and never moves. */
+   --sidebar: #18181b;
+   --sidebar-border: #27272a;
+   --sidebar-text: #ffffff;
+   --sidebar-text-muted: #94a3b8;
+   --sidebar-hover: rgba(255, 255, 255, 0.06);
+
+   /* =======================================================================
+      3. SEMANTIC — handoff §1 + §5 (badges)
+      Status, not brand. Constant across light and dark, on purpose: a
+      "danger" red that shifted with the theme would stop reading as danger.
+      ======================================================================= */
+   --danger: #dc2626;
+   --danger-border: #fca5a5;
+   --danger-soft: #fef2f2;
+   --warning: #c2410c;
+   --warning-soft: rgba(249, 115, 22, 0.12);
+   --info: #2563eb;
+   --info-soft: rgba(37, 99, 235, 0.1);
+   --neutral-badge-bg: #f1f5f9;
+   --neutral-badge-text: #64748b;
+   /* Success badges reuse the accent — the handoff has no separate green. */
+   --success: var(--brand);
+   --success-soft: var(--brand-soft);
+
+   /* =======================================================================
+      TYPOGRAPHY — handoff §2
+      Sora for display (page titles, stat values, wordmark, code input),
+      Inter for everything else.
+      ======================================================================= */
+   --font-display: 'Sora', 'Noto Sans Arabic', -apple-system, sans-serif;
+   --font-sans:
+      'Inter', 'Noto Sans Arabic', -apple-system, BlinkMacSystemFont,
+      'Segoe UI', sans-serif;
+   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+   /* =======================================================================
+      4a. FEEL — corner radius (handoff §3)
+      px, not rem, on purpose: the handoff specifies exact pixel corners, and
+      a corner is a fixed physical detail — it should not scale with the root
+      font size the way type and spacing do. Sharp mode is the toggle below.
+      ======================================================================= */
+   --radius-lg: 16px; /* cards, tables, modals */
+   --radius-xl: 16px;
+   --radius-2xl: 16px;
+   --radius-md: 10px; /* inputs, buttons, nav items */
+   --radius-sm: 9px; /* logo mark, avatar */
+   --radius-xs: 6px;
+   /* Badges are always fully round, unaffected by corner mode (§3). */
+   --radius-pill: 999px;
+
+   /* =======================================================================
+      4b. FEEL — density (handoff §3). Spacious is the default.
+      ======================================================================= */
+   --page-pad: 40px;
+   --card-pad: 24px;
+   --grid-gap: 20px;
+   --topbar-h: 72px;
+   --sidebar-w: 260px;
+   --sidebar-w-collapsed: 76px;
+   --field-pad-y: 12px;
+   --field-pad-x: 14px;
+   --form-gap: 16px;
+   --form-top: 32px;
+   --h1-size: 30px;
+   --stat-size: 32px;
+
+   /* =======================================================================
+      SHADOWS
+      Near-flat by design. The handoff calls for flat fills and explicitly no
+      shadow on buttons; these exist only to lift modals/popovers off the page.
+      ======================================================================= */
+   --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+   --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+   --shadow-md: 0 4px 8px -2px rgba(15, 23, 42, 0.08);
+   --shadow-lg: 0 12px 16px -4px rgba(15, 23, 42, 0.1);
+   --shadow-xl: 0 20px 24px -4px rgba(15, 23, 42, 0.12);
+}
+
+/* --------------------------------------------------------------------------
+   DARK MODE — handoff §1
+   Remaps the NEUTRAL aliases only. Brand, semantic status colors and the
+   sidebar are deliberately absent: they are identical in both modes, so they
+   fall through to :root rather than being restated (both selectors match the
+   same <html>, so an unset property simply keeps its :root value).
+   -------------------------------------------------------------------------- */
+:root[data-theme='dark'] {
+   --page-bg: #0b0e11;
+   --surface-bg: #17191d;
+   --border-color: #2a2d33;
+   --row-border: #23262b;
+   --table-head-bg: #1b1e23;
+   --text-strong: #f4f4f5;
+   --text-body: #d1d5db;
+   --text-muted-color: #9ca3af;
+   /* Handoff §5 flags the light-mode placeholder (#9CA3AF) as a contrast risk
+      on a dark surface; stepping it one shade lighter keeps it legible while
+      still reading as placeholder, not content. */
+   --text-placeholder: #8b929c;
+
+   --surface-secondary: #22252a; /* outline-button hover, dark equivalent */
+   --danger-soft: rgba(220, 38, 38, 0.12);
+   --neutral-badge-bg: rgba(148, 163, 184, 0.14);
+   --neutral-badge-text: #94a3b8;
+
+   /* Ink scale follows the text ramp so headings stay legible on dark. */
+   --primary-900: #f4f4f5;
+   --primary-700: #d1d5db;
+   --primary-500: #9ca3af;
+   --primary-200: #2a2d33;
+   --primary-100: #23262b;
+}
+
+/* --------------------------------------------------------------------------
+   FEEL TOGGLES — handoff §3
+   Set on <html> (see app/shell/feel.ts). Both are pure token remaps: no
+   component knows which mode is active, which is the whole point.
+   -------------------------------------------------------------------------- */
+:root[data-density='compact'] {
+   --page-pad: 16px;
+   --card-pad: 16px;
+   --grid-gap: 12px;
+   --topbar-h: 56px;
+   --sidebar-w: 220px;
+   --field-pad-y: 9px;
+   --field-pad-x: 12px;
+   --form-gap: 12px;
+   --form-top: 20px;
+   --h1-size: 22px;
+   --stat-size: 24px;
+}
+
+:root[data-corners='sharp'] {
+   --radius-lg: 4px;
+   --radius-xl: 4px;
+   --radius-2xl: 4px;
+   --radius-md: 3px;
+   --radius-sm: 2px;
+   --radius-xs: 2px;
+   /* --radius-pill deliberately not overridden: badges stay fully round. */
+}

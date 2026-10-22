@@ -1,0 +1,19 @@
+/*
+ * @mostafa-hussein-dev/ui — single stylesheet entry point.
+ *
+ * IMPORTANT: the consuming app must pull in Tailwind FIRST, then this file:
+ *
+ *     @import 'tailwindcss';
+ *     @import '@mostafa-hussein-dev/ui/styles.css';
+ *     @source '../node_modules/@mostafa-hussein-dev/ui/src';
+ *
+ * This file deliberately does NOT `@import 'tailwindcss'` — the app owns that,
+ * so Tailwind is only ever loaded once. See docs/INSTALL.md.
+ *
+ * Load order matters: tokens (raw CSS variables) must come before theme.css,
+ * which maps those variables onto Tailwind utilities via `@theme inline`.
+ */
+@import 'tw-animate-css';
+@import './tokens.css';
+@import './vendors.css';
+@import './theme.css';
